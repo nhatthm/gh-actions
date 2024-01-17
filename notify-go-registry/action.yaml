@@ -1,0 +1,42 @@
+---
+name: "Notidy Go Modules Registry"
+description: "Notify the registry of a new version of a module"
+
+inputs:
+  registry:
+    description: "The registry to notify"
+    required: true
+  token:
+    description: "The token to use to authenticate with the registry"
+    required: true
+  module:
+    description: "The module to notify. If not specified, the module name will be determined from the Makefile"
+    required: false
+
+outputs: {}
+
+runs:
+  using: "composite"
+  steps:
+    - id: vars
+      shell: bash
+      run: |
+        if [[ -z "${{ inputs.module }}" ]]; then
+          if [[ ! -f "Makefile" ]]; then
+            echo "Could not determine module name, no Makefile found"
+            exit 1
+          fi
+
+          make gha-vars
+        else
+          echo "::set-output name=MODULE_NAME::${{ inputs.module }}"
+        fi
+
+    - name: Notify ${{ inputs.registry }}
+      uses: benc-uk/workflow-dispatch@v121
+      with:
+        workflow: build
+        repo: nhatthm/${{ inputs.registry }}
+        token: ${{ inputs.token }}
+        inputs: '{"modules": "${{ steps.vars.outputs.MODULE_NAME }}"}'
+        ref: 'master'

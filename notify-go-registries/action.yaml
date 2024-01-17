@@ -1,0 +1,48 @@
+---
+name: "Notidy Go Modules Registries"
+description: "Notify all registries of a new version of a module"
+
+inputs:
+  token:
+    description: "The token to use to authenticate with the registries"
+    required: true
+  module:
+    description: "The module to notify. If not specified, the module name will be determined from the Makefile"
+    required: false
+
+outputs: {}
+
+runs:
+  using: "composite"
+  steps:
+    - id: vars
+      shell: bash
+      run: |
+        if [[ -z "${{ inputs.module }}" ]]; then
+          if [[ ! -f "Makefile" ]]; then
+            echo "Could not determine module name, no Makefile found"
+            exit 1
+          fi
+
+          make "$GITHUB_OUTPUT"
+        else
+          echo "MODULE_NAME=${{ inputs.module }}" >> "$GITHUB_OUTPUT"
+        fi
+
+    - name: Notify go-staging.nhat.io
+      uses: benc-uk/workflow-dispatch@v121
+      with:
+        workflow: build
+        repo: nhatthm/go-staging.nhat.io
+        token: ${{ inputs.token }}
+        inputs: '{"modules": "${{ steps.vars.outputs.MODULE_NAME }}"}'
+        ref: 'master'
+
+    - name: Notify go.nhat.io
+      uses: benc-uk/workflow-dispatch@v121
+      with:
+        workflow: build
+        repo: nhatthm/go.nhat.io
+        token: ${{ inputs.token }}
+        inputs: '{"modules": "${{ steps.vars.outputs.MODULE_NAME }}"}'
+        ref: 'master'
