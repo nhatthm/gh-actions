@@ -1,0 +1,20 @@
+---
+name: 'Setup Go environment'
+description: 'Setup a Go environment and add it to the PATH'
+
+inputs:
+  go-version:
+    description: 'The Go version to download (if necessary) and use. Supports semver spec and ranges. Be sure to enclose this option in single quotation marks.'
+
+outputs:
+  go-version:
+    description: 'The installed Go version. Useful when given a version range as input.'
+    value: ${{ steps.setup.outputs.go-version }}
+
+runs:
+  using: "composite"
+  steps:
+    - id: setup
+      uses: actions/setup-go@v5
+      with:
+        go-version: ${{ inputs.go-version }}
