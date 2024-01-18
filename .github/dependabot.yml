@@ -40,6 +40,17 @@ updates:
 
   - package-ecosystem: "github-actions"
     open-pull-requests-limit: 1
+    directory: "/golangci-lint"
+    schedule:
+      interval: "daily"
+    groups:
+      updates:
+        update-types:
+          - "minor"
+          - "patch"
+
+  - package-ecosystem: "github-actions"
+    open-pull-requests-limit: 1
     directory: "/notify-go-registries"
     schedule:
       interval: "daily"

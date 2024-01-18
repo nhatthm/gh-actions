@@ -1,0 +1,48 @@
+---
+name: "Run golangci-lint"
+description: "golangci-lint action with line-attached annotations for found issues, caching and parallel execution."
+
+inputs:
+  version:
+    description: |
+      The version of golangci-lint to use.
+      When `install-mode` is `binary` (default) the value can be v1.2 or v1.2.3 or `latest` to use the latest version.
+      When `install-mode` is `goinstall` the value can be v1.2.3, `latest`, or the hash of a commit.
+    required: false
+  args:
+    description: "golangci-lint command line arguments"
+    default: ""
+    required: false
+  working-directory:
+    description: "golangci-lint working directory, default is project root"
+    required: false
+  github-token:
+    description: "the token is used for fetching patch of a pull request to show only new issues"
+    default: ${{ github.token }}
+    required: false
+
+outputs: {}
+
+runs:
+  using: "composite"
+  steps:
+    - id: vars
+      shell: bash
+      run: |
+        if [[ -z "${{ inputs.version }}" ]]; then
+          if [[ ! -f "Makefile" ]]; then
+            echo "Could not determine version, no Makefile found"
+            exit 1
+          fi
+
+          make "$GITHUB_OUTPUT"
+        else
+          echo "GOLANGCI_LINT_VERSION=${{ inputs.version }}" >> "$GITHUB_OUTPUT"
+        fi
+
+    - uses: golangci/golangci-lint-action@v3
+      with:
+        version: ${{ steps.vars.outputs.GOLANGCI_LINT_VERSION }}
+        args: ${{ inputs.args }}
+        working-directory: ${{ inputs.working-directory }}
+        github-token: ${{ inputs.github-token }}
