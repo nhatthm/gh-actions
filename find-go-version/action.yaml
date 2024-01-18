@@ -1,0 +1,58 @@
+---
+name: "Find Go version"
+description: "Find the Go version to use"
+
+inputs:
+  go-version-file:
+    description: 'Path to the go.mod or go.work file.'
+    default: 'go.mod'
+
+outputs:
+  go-version:
+    description: "The Go version to use"
+    value: ${{ steps.go-mod.outputs.go-version }}
+  go-latest-version:
+    description: "The latest Go version"
+    value: ${{ steps.latest.outputs.go-version }}
+  go-supported-versions:
+    description: "The supported Go versions from the current Go version to the latest Go version"
+    value: ${{ steps.supported-versions.outputs.go-versions }}
+
+runs:
+  using: "composite"
+  steps:
+    - id: go-mod
+      shell: bash
+      run: |
+        goVersion=$(grep -E '^go ' "${{ inputs.go-version-file }}" | cut -d' ' -f2 | cut -d'.' -f 1-2)
+        echo "go-version=${goVersion}.x" >> "$GITHUB_OUTPUT"
+        echo "GO_VERSION=${goVersion}.x" >> "$GITHUB_ENV"
+
+    - id: latest
+      shell: bash
+      run: |
+        latestVersion=$(curl -s -q 'https://go.dev/VERSION?m=text' | head -1 | cut -c3- | cut -d'.' -f 1-2)
+        echo "go-version=${latestVersion}.x" >> "$GITHUB_OUTPUT"
+        echo "GO_LATEST_VERSION=${latestVersion}.x" >> "$GITHUB_ENV"
+
+    - id: supported-versions
+      shell: bash
+      run: |
+        version="${{ steps.go-mod.outputs.go-version }}"
+        latestVersion="${{ steps.latest.outputs.go-version }}"
+        majorVersion=$(echo "$version" | cut -d'.' -f1)
+        latestMajorVersion=$(echo "$latestVersion" | cut -d'.' -f1)
+        supportedVersions="[]"
+
+        if [[ "$majorVersion" == "$latestMajorVersion" ]]; then
+          versions=()
+
+          for i in $(seq "$(echo "$version" | cut -d '.' -f 2)" "$(echo "$latestVersion" | cut -d '.' -f 2)"); do
+            versions+=("${majorVersion}.${i}.x")
+          done
+
+          supportedVersions=$(echo -n "${versions[@]}" | jq -c -M -R -s 'split(" ") | [ .[] | select(length > 0) ]')
+        fi
+
+        echo "go-versions=${supportedVersions}" >> "$GITHUB_OUTPUT"
+        echo "GO_SUPPORTED_VERSIONS=${supportedVersions}" >> "$GITHUB_ENV"
