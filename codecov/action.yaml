@@ -1,0 +1,46 @@
+---
+name: 'Codecov'
+description: 'GitHub Action that uploads coverage reports for your repository to codecov.io'
+
+inputs:
+  token:
+    description: 'Repository upload token - get it from codecov.io. Required only for private repositories'
+    required: false
+  file:
+    description: 'Path to coverage file to upload'
+    required: false
+  files:
+    description: 'Comma-separated list of files to upload'
+    required: false
+  directory:
+    description: 'Directory to search for coverage reports.'
+    required: false
+  flags:
+    description: 'Flag upload to group coverage metrics (e.g. unittests | integration | ui,chrome)'
+    required: false
+  verbose:
+    description: 'Specify whether the Codecov output should be verbose'
+    required: false
+  version:
+    description: 'Specify which version of the Codecov CLI should be used. Defaults to `latest`'
+    required: false
+  working-directory:
+    description: 'Directory in which to execute codecov.sh'
+    required: false
+
+outputs: {}
+
+runs:
+  using: "composite"
+  steps:
+    - uses: codecov/codecov-action@v3
+      with:
+        token: ${{ inputs.token }}
+        file: ${{ inputs.file }}
+        files: ${{ inputs.files }}
+        directory: ${{ inputs.directory }}
+        flags: ${{ inputs.flags }}
+        verbose: ${{ inputs.verbose }}
+        version: ${{ inputs.version }}
+        working-directory: ${{ inputs.working-directory }}
+

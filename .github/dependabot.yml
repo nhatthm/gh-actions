@@ -18,6 +18,17 @@ updates:
 
   - package-ecosystem: "github-actions"
     open-pull-requests-limit: 1
+    directory: "/codecov"
+    schedule:
+      interval: "daily"
+    groups:
+      updates:
+        update-types:
+          - "minor"
+          - "patch"
+
+  - package-ecosystem: "github-actions"
+    open-pull-requests-limit: 1
     directory: "/find-go-versions"
     schedule:
       interval: "daily"
