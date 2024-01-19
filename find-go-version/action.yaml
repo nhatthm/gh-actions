@@ -21,19 +21,24 @@ outputs:
 runs:
   using: "composite"
   steps:
-    - id: go-mod
-      shell: bash
-      run: |
-        goVersion=$(grep -E '^go ' "${{ inputs.go-version-file }}" | cut -d' ' -f2 | cut -d'.' -f 1-2)
-        echo "go-version=${goVersion}.x" >> "$GITHUB_OUTPUT"
-        echo "GO_VERSION=${goVersion}.x" >> "$GITHUB_ENV"
-
     - id: latest
       shell: bash
       run: |
         latestVersion=$(curl -s -q 'https://go.dev/VERSION?m=text' | head -1 | cut -c3- | cut -d'.' -f 1-2)
         echo "go-version=${latestVersion}.x" >> "$GITHUB_OUTPUT"
         echo "GO_LATEST_VERSION=${latestVersion}.x" >> "$GITHUB_ENV"
+
+    - id: go-mod
+      shell: bash
+      run: |
+        if [[ -f "${{ inputs.go-version-file }}" ]]; then
+          goVersion=$(grep -E '^go ' "${{ inputs.go-version-file }}" | cut -d' ' -f2 | cut -d'.' -f 1-2)
+        else
+          goVersion=${{ steps.latest.outputs.go-version }}
+        fi
+
+        echo "go-version=${goVersion}.x" >> "$GITHUB_OUTPUT"
+        echo "GO_VERSION=${goVersion}.x" >> "$GITHUB_ENV"
 
     - id: supported-versions
       shell: bash
