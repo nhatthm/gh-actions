@@ -1,0 +1,95 @@
+---
+name: "Add & Commit"
+description: "Automatically commit changes made in the workflow run directly to the repo"
+
+inputs:
+  add:
+    description: Arguments for the git add command
+    required: false
+    default: '.'
+  author_name:
+    description: The name of the user that will be displayed as the author of the commit
+    required: false
+  author_email:
+    description: The email of the user that will be displayed as the author of the commit
+    required: false
+  commit:
+    description: Additional arguments for the git commit command
+    required: false
+  committer_name:
+    description: The name of the custom committer you want to use
+    required: false
+  committer_email:
+    description: The email of the custom committer you want to use
+    required: false
+  cwd:
+    description: The directory where your repository is located. You should use actions/checkout first to set it up
+    required: false
+    default: '.'
+  default_author:
+    description: How the action should fill missing author name or email.
+    required: false
+    default: 'github_actor'
+  fetch:
+    description: Arguments for the git fetch command (if 'false', the action won't fetch the repo)
+    required: false
+    default: --tags --force
+  message:
+    description: The message for the commit
+    required: false
+  new_branch:
+    description: The name of the branch to create.
+    required: false
+  pathspec_error_handling:
+    description: The way the action should handle pathspec errors from the add and remove commands.
+    required: false
+    default: ignore
+  pull:
+    description: Arguments for the git pull command. By default, the action does not pull.
+    required: false
+  push:
+    description: Whether to push the commit and, if any, its tags to the repo. It can also be used to set the git push arguments (more info in the README)
+    required: false
+    default: 'true'
+  remove:
+    description: Arguments for the git rm command
+    required: false
+  tag:
+    description: Arguments for the git tag command (the tag name always needs to be the first word not preceded by a hyphen)
+    required: false
+  tag_push:
+    description: Arguments for the git push --tags command (any additional argument will be added after --tags)
+    required: false
+
+  # Input not required from the user
+  github_token:
+    description: The token used to make requests to the GitHub API. It's NOT used to make commits and should not be changed.
+    required: false
+    default: ${{ github.token }}
+
+outputs: {}
+
+runs:
+  using: "composite"
+  steps:
+    - uses: EndBug/add-and-commit@v9
+      with:
+        add: ${{ inputs.add }}
+        author_name: ${{ inputs.author_name }}
+        author_email: ${{ inputs.author_email }}
+        commit: ${{ inputs.commit }}
+        committer_name: ${{ inputs.committer_name }}
+        committer_email: ${{ inputs.committer_email }}
+        cwd: ${{ inputs.cwd }}
+        default_author: ${{ inputs.default_author }}
+        fetch: ${{ inputs.fetch }}
+        message: ${{ inputs.message }}
+        new_branch: ${{ inputs.new_branch }}
+        pathspec_error_handling: ${{ inputs.pathspec_error_handling }}
+        pull: ${{ inputs.pull }}
+        push: ${{ inputs.push }}
+        remove: ${{ inputs.remove }}
+        tag: ${{ inputs.tag }}
+        tag_push: ${{ inputs.tag_push }}
+        github_token: ${{ inputs.github_token }}
+
