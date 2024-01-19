@@ -1,0 +1,43 @@
+---
+name: 'Run gherkin-lint'
+description: "A GitHub Action to parse feature files and run linting using gherkin-lint"
+
+inputs:
+  version:
+    description: "Version of gherkin-lint to use in the `npm install -g gherkin-lint` command. Default to `latest`"
+    required: false
+    default: 'latest'
+  feature_files:
+    description: 'Comma separated list of feature files/glob patterns'
+    required: false
+    default: '.'
+  config_file:
+    description: 'Configuration file'
+    required: false
+    default: '/root/.gherkin-lintrc'
+  format:
+    description: 'Output format. Possible values: json, stylish, xunit. Default to `stylish`'
+    required: false
+    default: 'stylish'
+  ignore:
+    description: 'Comma seperated list of files/glob patterns that the linter should ignore, overrides .gherkin-lintignore file'
+    required: false
+    default: ''
+  rule_dirs:
+    description: 'Comma seperated list of additional rule directories'
+    required: false
+    default: ''
+
+outputs: {}
+
+runs:
+  using: "composite"
+  steps:
+    - uses: nhatthm/gherkin-lint-action@v1.0.0
+      with:
+        version: ${{ inputs.version }}
+        feature_files: ${{ inputs.feature_files }}
+        config_file: ${{ inputs.config_file }}
+        format: ${{ inputs.format }}
+        ignore: ${{ inputs.ignore }}
+        rule_dirs: ${{ inputs.rule_dirs }}
