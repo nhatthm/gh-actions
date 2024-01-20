@@ -25,6 +25,8 @@ runs:
           fi
 
           make "$GITHUB_OUTPUT"
+        elif [[ "${{ inputs.module }}" == "false" ]]; then
+          echo "MODULE_NAME=" >> "$GITHUB_OUTPUT"
         else
           echo "MODULE_NAME=${{ inputs.module }}" >> "$GITHUB_OUTPUT"
         fi
