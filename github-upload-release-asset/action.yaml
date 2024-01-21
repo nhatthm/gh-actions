@@ -1,0 +1,43 @@
+---
+name: 'Upload Release Asset'
+description: 'Upload a release asset to an existing release in your repository'
+
+inputs:
+  upload_url:
+    description: 'The URL for uploading assets to the release'
+    required: true
+  asset_path:
+    description: 'The path to the asset you want to upload'
+    required: true
+  asset_name:
+    description: 'The name of the asset you want to upload'
+    required: true
+  asset_content_type:
+    description: 'The content-type of the asset you want to upload. See the supported Media Types here: https://www.iana.org/assignments/media-types/media-types.xhtml for more information'
+    required: true
+  token:
+    description: "Authorized secret GitHub Personal Access Token. Defaults to github.token"
+    required: false
+    default: ${{ github.token }}
+
+outputs:
+  url:
+    description: 'The URL to use when accessing the asset via a REST API request'
+    value: ${{ steps.upload-artifact.outputs.url }}
+  browser_download_url:
+    description: 'The URL users can navigate to in order to download the uploaded asset'
+    value: ${{ steps.upload-artifact.outputs.browser_download_url }}
+
+runs:
+  using: "composite"
+  steps:
+    - name: Upload Artifact
+      id: upload-artifact
+      uses: github.com/nhatthm/upload-release-asset-action@master
+      env:
+        GITHUB_TOKEN: ${{ inputs.token }}
+      with:
+        upload_url: ${{ inputs.upload_url }}
+        asset_path: ${{ inputs.asset_path }}
+        asset_name: ${{ inputs.asset_name }}
+        asset_content_type: ${{ inputs.asset_content_type }}
