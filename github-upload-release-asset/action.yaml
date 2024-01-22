@@ -33,7 +33,7 @@ runs:
   steps:
     - name: Upload Artifact
       id: upload-artifact
-      uses: github.com/nhatthm/upload-release-asset-action@master
+      uses: nhatthm/upload-release-asset-action@master
       env:
         GITHUB_TOKEN: ${{ inputs.token }}
       with:
