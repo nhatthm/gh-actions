@@ -1,0 +1,11 @@
+name: 'Run stylelint'
+description: 'GitHub Action that runs stylelint.'
+
+inputs: {}
+
+outputs: {}
+
+runs:
+  using: "composite"
+  steps:
+    - uses: nhatthm/stylelint@master
