@@ -46,3 +46,4 @@ runs:
         args: ${{ inputs.args }}
         working-directory: ${{ inputs.working-directory }}
         github-token: ${{ inputs.github-token }}
+        install-mode: "binary"
