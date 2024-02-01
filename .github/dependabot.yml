@@ -62,6 +62,17 @@ updates:
 
   - package-ecosystem: "github-actions"
     open-pull-requests-limit: 1
+    directory: "/download-artifact"
+    schedule:
+      interval: "daily"
+    groups:
+      updates:
+        update-types:
+          - "minor"
+          - "patch"
+
+  - package-ecosystem: "github-actions"
+    open-pull-requests-limit: 1
     directory: "/find-go-version"
     schedule:
       interval: "daily"
@@ -173,6 +184,17 @@ updates:
   - package-ecosystem: "github-actions"
     open-pull-requests-limit: 1
     directory: "/setup-go"
+    schedule:
+      interval: "daily"
+    groups:
+      updates:
+        update-types:
+          - "minor"
+          - "patch"
+
+  - package-ecosystem: "github-actions"
+    open-pull-requests-limit: 1
+    directory: "/upload-artifact"
     schedule:
       interval: "daily"
     groups:
