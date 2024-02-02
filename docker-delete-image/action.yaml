@@ -38,7 +38,7 @@ runs:
   using: "composite"
   steps:
     - name: Delete image
-      uses: bots-house/ghcr-delete-image-action@v1
+      uses: bots-house/ghcr-delete-image-action@v1.1.0
       with:
         owner: ${{ inputs.owner }}
         name: ${{ inputs.name }}
