@@ -40,9 +40,9 @@ runs:
     - name: Delete image
       uses: bots-house/ghcr-delete-image-action@v1.1.0
       with:
-        owner: ${{ inputs.owner }}
+        owner: ${{ inputs.username }}
         name: ${{ inputs.name }}
-        token: ${{ inputs.token }}
+        token: ${{ inputs.password }}
         tag: ${{ inputs.tag }}
         untagged-keep-latest: ${{ inputs.untagged-keep-latest }}
         untagged-older-than: ${{ inputs.untagged-older-than }}
