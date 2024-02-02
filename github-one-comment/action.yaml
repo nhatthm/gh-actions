@@ -1,0 +1,41 @@
+---
+name: 'Maintain One Comment'
+description: 'Maintain just one comment in Issue and PR.'
+
+inputs:
+  token:
+    description: Secret GitHub API token to use for making API requests.
+    default: ${{ github.token }}
+    required: true
+  body:
+    description: Comment content.
+  emojis:
+    description: Add emojis to comment.
+  number:
+    description: Manually control the issue or PR number
+  update-mode:
+    description: Update comment mode. Default `replace`. Option append.
+    default: "replace"
+  comment-auth:
+    description: Comment auth filter.
+  body-include:
+    description: Comment body filter.
+  delete:
+    description: Will delete all comments
+
+outputs: {}
+
+runs:
+  using: "composite"
+  steps:
+    - name: Comment
+      uses: actions-cool/maintain-one-comment@v3
+      with:
+        token: ${{ inputs.token }}
+        body: ${{ inputs.body }}
+        emojis: ${{ inputs.emojis }}
+        number: ${{ inputs.number }}
+        update-mode: ${{ inputs.update-mode }}
+        comment-auth: ${{ inputs.comment-auth }}
+        body-include: ${{ inputs.body-include }}
+        delete: ${{ inputs.delete }}

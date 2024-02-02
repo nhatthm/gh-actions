@@ -128,6 +128,17 @@ updates:
 
   - package-ecosystem: "github-actions"
     open-pull-requests-limit: 1
+    directory: "/github-one-comment"
+    schedule:
+      interval: "daily"
+    groups:
+      updates:
+        update-types:
+          - "minor"
+          - "patch"
+
+  - package-ecosystem: "github-actions"
+    open-pull-requests-limit: 1
     directory: "/github-release"
     schedule:
       interval: "daily"
