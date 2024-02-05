@@ -20,6 +20,6 @@ runs:
       shell: bash
       env:
         GITHUB_TOKEN: ${{ inputs.token }}
-      run: >
+      run: |
         gh release delete ${{ inputs.release }} --yes || true
         git push origin :${{ inputs.release }} || true
