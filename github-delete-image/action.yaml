@@ -26,7 +26,7 @@ runs:
         PACKAGE_NAME: ${{ inputs.name }}
         PACKAGE_TYPE: container
         PACKAGE_VERSION: ${{ inputs.version }}
-      run: >
+      run: |
         if [[ -z "$PACKAGE_NAME" ]]; then
           PACKAGE_NAME=${GITHUB_REPOSITORY#$GITHUB_REPOSITORY_OWNER/}
         fi
@@ -61,7 +61,7 @@ runs:
             DELETED=$((DELETED + 1))
           done < <( \
             echo "${PACKAGES}" \
-            | jq -r ".[] | select(.metadata.container.tags[] | contains(\"${PACKAGE_VERSION}\"))" \
+            | jq -r -c -M ".[] | select(.metadata.container.tags[] | contains(\"${PACKAGE_VERSION}\"))" \
           )
 
           if [[ $DELETED -eq 0 ]]; then
