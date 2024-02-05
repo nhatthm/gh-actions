@@ -31,13 +31,40 @@ runs:
           PACKAGE_NAME=${GITHUB_REPOSITORY#$GITHUB_REPOSITORY_OWNER/}
         fi
 
-        while read -r PACKAGE_VERSION_ID; do
-          gh api \
-            --method DELETE \
-            -H "Accept: application/vnd.github+json" \
-            "/user/packages/${PACKAGE_TYPE}/${PACKAGE_NAME}/versions/${PACKAGE_VERSION_ID}"
-        done < <( \
-          gh api -H "Accept: application/vnd.github+json" \
-            "/user/packages/${PACKAGE_TYPE}/${PACKAGE_NAME}/versions" \
-          | jq -r ".[] | select(.metadata.container.tags[] | contains(\"${PACKAGE_VERSION}\")) | .id" \
-        )
+        PAGE=1
+
+        while true; do
+          PACKAGES="$(
+            gh api -H "Accept: application/vnd.github+json" \
+              "/user/packages/${PACKAGE_TYPE}/${PACKAGE_NAME}/versions?page=${PAGE}" \
+            | jq -r -c -M "."
+          )"
+          COUNT=$(echo "${PACKAGES}" | jq -r ". | length")
+
+          if [[ $COUNT -eq 0 ]]; then
+            break
+          fi
+
+          DELETED=0
+
+          while read -r PACKAGE; do
+            PACKAGE_VERSION_ID=$(echo "${PACKAGE}" | jq -r ".id")
+            PACKAGE_VERSION_NAME=$(echo "${PACKAGE}" | jq -r ".name")
+
+            echo "Deleting package version ${PACKAGE_VERSION_NAME} (id: ${PACKAGE_VERSION_ID})..."
+
+            gh api \
+              --method DELETE \
+              -H "Accept: application/vnd.github+json" \
+              "/user/packages/${PACKAGE_TYPE}/${PACKAGE_NAME}/versions/${PACKAGE_VERSION_ID}"
+
+            DELETED=$((DELETED + 1))
+          done < <( \
+            echo "${PACKAGES}" \
+            | jq -r ".[] | select(.metadata.container.tags[] | contains(\"${PACKAGE_VERSION}\"))" \
+          )
+
+          if [[ $DELETED -eq 0 ]]; then
+            PAGE=$((PAGE + 1))
+          fi
+        done
