@@ -1,0 +1,49 @@
+---
+name: "Delete GitHub Package Release"
+description: "Delete a release from a GitHub package"
+
+inputs:
+  type:
+    description: "The type of the package to delete"
+    required: false
+    default: "container"
+  name:
+    description: "The name of the package to delete"
+    required: false
+  version:
+    description: "The version of the package to delete"
+    required: true
+  token:
+    description: "Authorized secret GitHub Personal Access Token. Defaults to github.token"
+    required: false
+    default: ${{ github.token }}
+
+outputs: {}
+
+runs:
+  using: "composite"
+  steps:
+    - name: "Delete Package Release"
+      shell: bash
+      env:
+        GITHUB_TOKEN: ${{ inputs.token }}
+        PACKAGE_NAME: ${{ inputs.name }}
+        PACKAGE_TYPE: ${{ inputs.type }}
+        PACKAGE_VERSION: ${{ inputs.version }}
+      run: >
+        set -ex
+
+        if [[ -z "$PACKAGE_NAME" ]]; then
+          PACKAGE_NAME=${GITHUB_REPOSITORY#$GITHUB_REPOSITORY_OWNER/}
+        fi
+
+        while read -r PACKAGE_VERSION_ID; do
+          gh api \
+            --method DELETE \
+            -H "Accept: application/vnd.github+json" \
+            "/user/packages/${PACKAGE_TYPE}/${PACKAGE_NAME}/versions/${PACKAGE_VERSION_ID}"
+        done < <( \
+          gh api -H "Accept: application/vnd.github+json" \
+            "/user/packages/${PACKAGE_TYPE}/${PACKAGE_NAME}/versions" \
+          | jq -r ".[] | select(.metadata.container.tags[] | contains(\"${PACKAGE_VERSION}\")) | .id" \
+        )
