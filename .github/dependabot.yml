@@ -117,6 +117,17 @@ updates:
 
   - package-ecosystem: "github-actions"
     open-pull-requests-limit: 1
+    directory: "/github-delete-release"
+    schedule:
+      interval: "daily"
+    groups:
+      updates:
+        update-types:
+          - "minor"
+          - "patch"
+
+  - package-ecosystem: "github-actions"
+    open-pull-requests-limit: 1
     directory: "/github-get-release"
     schedule:
       interval: "daily"
