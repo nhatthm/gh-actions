@@ -1,12 +1,8 @@
 ---
-name: "Delete GitHub Package Release"
-description: "Delete a release from a GitHub package"
+name: "Delete a GitHub Container Registry image"
+description: "Delete a package from the GitHub Container Registry"
 
 inputs:
-  type:
-    description: "The type of the package to delete"
-    required: false
-    default: "container"
   name:
     description: "The name of the package to delete"
     required: false
@@ -23,16 +19,14 @@ outputs: {}
 runs:
   using: "composite"
   steps:
-    - name: "Delete Package Release"
+    - name: "Delete"
       shell: bash
       env:
         GITHUB_TOKEN: ${{ inputs.token }}
         PACKAGE_NAME: ${{ inputs.name }}
-        PACKAGE_TYPE: ${{ inputs.type }}
+        PACKAGE_TYPE: container
         PACKAGE_VERSION: ${{ inputs.version }}
       run: >
-        set -ex
-
         if [[ -z "$PACKAGE_NAME" ]]; then
           PACKAGE_NAME=${GITHUB_REPOSITORY#$GITHUB_REPOSITORY_OWNER/}
         fi
