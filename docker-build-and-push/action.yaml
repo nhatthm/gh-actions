@@ -33,6 +33,12 @@ inputs:
   tags:
     description: "List of tags"
     required: false
+  annotations:
+    description: "List of annotation to set to the image"
+    required: false
+  labels:
+    description: "List of metadata for an image"
+    required: false
 
 outputs: {}
 
@@ -63,3 +69,5 @@ runs:
         push: ${{ inputs.push }}
         tags: ${{ inputs.tags }}
         platforms: ${{ inputs.platforms }}
+        annotations: ${{ inputs.annotations }}
+        labels: ${{ inputs.labels }}
