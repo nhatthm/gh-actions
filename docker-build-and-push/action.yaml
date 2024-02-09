@@ -70,7 +70,8 @@ runs:
         context: ${{ inputs.context }}
         file: ${{ inputs.file }}
         push: ${{ inputs.push }}
-        tags: ${{ inputs.tags }}
         platforms: ${{ inputs.platforms }}
+        tags: ${{ inputs.tags }}
         annotations: ${{ inputs.annotations }}
         labels: ${{ inputs.labels }}
+        outputs: ${{ inputs.outputs }}
