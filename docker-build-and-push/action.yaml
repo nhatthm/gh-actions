@@ -39,6 +39,9 @@ inputs:
   labels:
     description: "List of metadata for an image"
     required: false
+  outputs:
+    description: "List of output destinations (format: type=local,dest=path)"
+    required: false
 
 outputs: {}
 
