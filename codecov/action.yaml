@@ -6,6 +6,7 @@ inputs:
   token:
     description: 'Repository upload token - get it from codecov.io. Required only for private repositories'
     required: false
+    default: ${{ secrets.CODECOV_TOKEN }}
   file:
     description: 'Path to coverage file to upload'
     required: false
