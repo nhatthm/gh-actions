@@ -24,6 +24,9 @@ inputs:
   version:
     description: 'Specify which version of the Codecov CLI should be used. Defaults to `latest`'
     required: false
+  slug:
+    description: 'Specify the slug manually (Enterprise use)'
+    required: false
   root-dir:
     description: 'Used when not in git/hg project to identify project root directory'
     required: false
@@ -47,6 +50,7 @@ runs:
         flags: ${{ inputs.flags }}
         verbose: ${{ inputs.verbose }}
         version: ${{ inputs.version }}
+        slug: ${{ inputs.slug }}
         root_dir: ${{ inputs.root-dir }}
         working-directory: ${{ inputs.working-directory }}
 
