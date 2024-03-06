@@ -21,5 +21,8 @@ runs:
       env:
         GITHUB_TOKEN: ${{ inputs.token }}
       run: |
-        gh release delete ${{ inputs.release }} --yes || true
-        git push origin :${{ inputs.release }} || true
+        echo "Delete GitHub release '${{ inputs.release }}'";
+        gh release delete ${{ inputs.release }} --yes || true;
+
+        echo "Delete git tag '${{ inputs.release }}'";
+        git push origin :${{ inputs.release }} || true;
