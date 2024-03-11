@@ -26,3 +26,5 @@ runs:
 
         echo "Delete git tag '${{ inputs.release }}'";
         git push origin :${{ inputs.release }} || true;
+
+        sleep 3
