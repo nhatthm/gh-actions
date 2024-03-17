@@ -32,7 +32,7 @@ runs:
         fi
 
     - name: Notify go-staging.nhat.io
-      uses: benc-uk/workflow-dispatch@v121
+      uses: benc-uk/workflow-dispatch@v1
       with:
         workflow: build
         repo: nhatthm/go-staging.nhat.io
@@ -41,7 +41,7 @@ runs:
         ref: 'master'
 
     - name: Notify go.nhat.io
-      uses: benc-uk/workflow-dispatch@v121
+      uses: benc-uk/workflow-dispatch@v1
       with:
         workflow: build
         repo: nhatthm/go.nhat.io
