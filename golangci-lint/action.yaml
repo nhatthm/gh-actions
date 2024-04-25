@@ -40,7 +40,7 @@ runs:
           echo "GOLANGCI_LINT_VERSION=${{ inputs.version }}" >> "$GITHUB_OUTPUT"
         fi
 
-    - uses: golangci/golangci-lint-action@v4
+    - uses: golangci/golangci-lint-action@v5
       with:
         version: ${{ steps.vars.outputs.GOLANGCI_LINT_VERSION }}
         args: "${{ inputs.args }} ${{ runner.debug == 1 && '-v' || '' }}"
