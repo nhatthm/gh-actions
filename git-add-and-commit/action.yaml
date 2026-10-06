@@ -72,7 +72,7 @@ outputs: {}
 runs:
   using: "composite"
   steps:
-    - uses: EndBug/add-and-commit@v9
+    - uses: EndBug/add-and-commit@v11
       with:
         add: ${{ inputs.add }}
         author_name: ${{ inputs.author_name }}
