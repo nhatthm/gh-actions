@@ -76,7 +76,7 @@ runs:
   steps:
     - name: Metadata
       id: meta
-      uses: docker/metadata-action@v5
+      uses: docker/metadata-action@v6
       with:
         context: ${{ inputs.context }}
         images: ${{ inputs.images }}
